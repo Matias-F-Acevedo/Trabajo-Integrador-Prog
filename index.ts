@@ -19,6 +19,7 @@ console.log("-----------------BIENVENIDO AL MENU DE LEGAJOS-----------------");
 
 let numero = readLineSync.keyInSelect(opciones, "Seleccione una opcion: ")
 
+const gestorDelColegioMatias= new GestorColegio()
 
 switch (numero) {
     case 0:

@@ -10,14 +10,14 @@ export default class Alumno implements Persona {
     edad: number;
     dni: number;
     // la matricula esta por ahora de tipo number, pero debe ir una id aleatoria(la cual se le deberia de asignar desde la funcion del gestor "crear alumno"):
-    matricula:number
+    matricula:string;
     curso: Curso; 
     materiasMatriculado:Materia[]
     notaPorMateria:NotaPorMateria[];
     promedioGeneral: number;
     
 
-    constructor(nombre:string, apellido:string, edad:number, dni:number, matricula:number, curso:Curso, materiasMatriculado: Materia[], notaPorMateria:NotaPorMateria[], promedioGeneral: number){
+    constructor(nombre:string, apellido:string, edad:number, dni:number, matricula:string, curso:Curso, materiasMatriculado: Materia[], notaPorMateria:NotaPorMateria[], promedioGeneral: number){
         this.nombre= nombre;
         this.apellido= apellido;
         this.edad= edad;
