@@ -65,6 +65,58 @@ let quinto:Curso= new Curso("Quinto",materiasDeQuinto);
 let sexto:Curso= new Curso("Sexto",materiasDeSexto);
 
 
+//creo una funcion para preguntar sobre un dato(nombre,apellido,etc) a una entidad (alumno o profesor) y retorna el dato.
+function preguntarDato (entidad:string, dato:string):string{
+    let informacion:string = readLineSync.question(chalk.greenBright(`Escriba el ${dato} del ${entidad}: `)).toLocaleLowerCase();
+    return informacion
+}
+
+//creo una funcion para reutilizar el codigo en "crearProfesor", la misma recibe por parametro los cursos, en este caso dentro del gestorColegio es =this.cursos.
+function seleccionarCurso(cursos:Curso[],pregunta:string):Curso {
+    // creo un array para almacenar los NOMBRES de los cursos recibidos por parametro, los mismos son extraidos y pusheados(en "propiedadNombreDeLosCursos") con el ciclo for.
+    let propiedadNombreDeLosCursos:string[]=[]
+    for (let i = 0; i < cursos.length; i++) {
+        const curso = cursos[i];
+        propiedadNombreDeLosCursos.push(curso.nombre);
+    }
+    // muestro por consola el array "propiedadNombreDeLosCursos"(son los nombres de los cursos) para que usuario seleccione una opcion: 
+    let indiceCurso = readLineSync.keyInSelect(propiedadNombreDeLosCursos,pregunta);
+    // guardo la opcion elegida en una variable que despues se retorna. 
+    const cursoSeleccionado:Curso = cursos[indiceCurso]
+    return cursoSeleccionado
+}
+
+
+//creo una funcion para reutilizar el codigo en "crearProfesor", la misma recibe por parametro un curso y una indicacion, se accede a las materias del curso, las muestra por consola y el usuario selecciona las que quiere. Retornando la funcion un array de materias.
+function seleccionarMaterias(curso:Curso, indicacion:string):Materia[] {
+    // creo un array para almacenar los NOMBRES de LAS MATERIAS, los mismos son extraidos y pusheados(en "nombredeLasMaterias") con el ciclo for.
+    let nombredeLasMaterias:string[] = [];
+    for (let i = 0; i < curso.materias.length; i++) {
+         const materia = curso.materias[i];
+         nombredeLasMaterias.push(materia.nombre);
+    }
+    // creo un array para almacenar las materias que se matricula/dicta el usuario por consola.
+    let materiasSeleccionadas:Materia[] = [];
+
+    // creo un while para que el usuario pueda repetir la seleccion de materias hasta que termine.
+    let condicion:number=0
+    while (condicion != -1) {
+        
+        let materia = readLineSync.keyInSelect(nombredeLasMaterias, indicacion);
+        // Condiciones para que no pueda anotarse mas de una vez a una misma materia y que no se almacena un dato erroneo en el array "materiasMatriculado"
+        if(materia!== -1 && nombredeLasMaterias[materia] != `---`){
+            materiasSeleccionadas.push(curso.materias[materia])
+            console.log(chalk.green(`Se ha matriculado a ${nombredeLasMaterias[materia]}`));
+            nombredeLasMaterias.splice(materia,1,"---")
+            }else {
+                console.log(chalk.red("Ya se matriculo a esa materia, seleccione una opcion valida"));
+            }
+        condicion=materia
+    }
+    return materiasSeleccionadas
+}
+
+
 
 export default class GestorColegio  {
     alumnos: Alumno[]= []
@@ -75,51 +127,21 @@ export default class GestorColegio  {
 
 
     crearAlumno() {
-        let nombre:string = readLineSync.question(chalk.greenBright("Escriba el NOMBRE del alumno: ")).toLocaleLowerCase();
-        let apellido:string = readLineSync.question(chalk.greenBright("Escriba el APELLIDO del alumno: ")).toLocaleLowerCase();
-        let edad:number = readLineSync.question(chalk.greenBright("Escriba la EDAD del alumno: ")).toLocaleLowerCase();
-        let dni:number = readLineSync.question(chalk.greenBright("Escriba el DNI del alumno: ")).toLocaleLowerCase();
+        // ejecuto la funcion preguntarDato que recibe por parametro la entidad (en este caso Alumno) y el dato a obtener. retorna un string, pero en edad y dni  lo convierto a number con parseInt. 
+        let nombre:string = preguntarDato("Alumno","NOMBRE");
+        let apellido:string = preguntarDato("Alumno","APELLIDO");
+        let edad:number = parseInt(preguntarDato("Alumno","EDAD"));
+        let dni:number = parseInt(preguntarDato("Alumno","DNI"));
 
-        // creo un array para almacenar los NOMBRES de los cursos, los mismos son extraidos y pusheados(en "propiedadNombreDeLosCursos") con el ciclo for.
-        let propiedadNombreDeLosCursos:string[]=[]
-        for (let i = 0; i < this.cursos.length; i++) {
-            const curso = this.cursos[i];
-            propiedadNombreDeLosCursos.push(curso.nombre);
-        }
-        // muestro por consola el array "propiedadNombreDeLosCursos"(son los nombres de los cursos) para que usuario seleccione una opcion: 
-        let indiceCurso = readLineSync.keyInSelect(propiedadNombreDeLosCursos,"Seleccione el curso: ");
-        // guardo la opcion elegida en una variable que despues la recibe por parametro el constructor de la clase Alumno. 
-        const cursoElegido:Curso = this.cursos[indiceCurso]
+        // ejecuto la funcion "seleccionarCurso" (ambito Global) y el retorno se guarda en la variable cursoElegido 
+        const cursoElegidoAlumno:Curso = seleccionarCurso(this.cursos,"Seleccione el curso: ");
         console.clear();
-      
+
         //se le asigna a matricula una id aleatoria de 7 caracteres:
         let matricula:string = uuidv4().slice (0,7); 
 
-        // creo un array para almacenar los NOMBRES de LAS MATERIAS, los mismos son extraidos y pusheados(en "nombredeLasMaterias") con el ciclo for.
-
-        let nombredeLasMaterias:string[] = [];
-        for (let i = 0; i < cursoElegido.materias.length; i++) {
-            const materia = cursoElegido.materias[i];
-            nombredeLasMaterias.push(materia.nombre);
-        }
-        // creo un array para almacenar las materias que se matricula/anota el usuario por consola.
-        let materiasMatriculado:Materia[] = [];
-
-        // creo un while para que el usuario pueda repetir la seleccion de materias hasta que termine.
-        let condicion:number=0
-        while (condicion != -1) {
-        
-        let materia = readLineSync.keyInSelect(nombredeLasMaterias, "Seleccione las materias a las que se desea matricular (Ingrese 0 una vez que finalice): ");
-        // Condiciones para que no pueda anotarse mas de una vez a una misma materia y que no se almacena un dato erroneo en el array "materiasMatriculado"
-        if(materia!== -1 && nombredeLasMaterias[materia] != `---`){
-            materiasMatriculado.push(cursoElegido.materias[materia])
-            console.log(chalk.green(`Se ha matriculado a ${nombredeLasMaterias[materia]}`));
-            nombredeLasMaterias.splice(materia,1,"---")
-            }else {
-                console.log(chalk.red("Ya se matriculo a esa materia, seleccione una opcion valida"));
-            }
-        condicion=materia
-    }
+        //ejecuto la funcion seleccionarMaterias(ambito global),que recibe por parametro un curso y la indicacion. Retorna las materias seleccionadas por consola de ese curso.
+        const materiasMatriculado:Materia[]= seleccionarMaterias(cursoElegidoAlumno, "Seleccione las materias a las que se desea matricular (Ingrese 0 una vez que finalice): ")
         console.clear();
         
         // creo un array donde se almacenaran los objetos "NotaPorMateria", los cuales tienen dos propiedades: nombre y nota.
@@ -145,8 +167,8 @@ export default class GestorColegio  {
         
 
         // creo el objeto alumno con todos los datos obtenidos anteriormente:
-        const nuevoAlumno: Alumno = new Alumno (nombre, apellido, edad, dni,matricula, cursoElegido, materiasMatriculado, notasPorTodasLasMaterias, promedioGeneral);
-        
+        const nuevoAlumno: Alumno = new Alumno (nombre, apellido, edad, dni,matricula, cursoElegidoAlumno, materiasMatriculado, notasPorTodasLasMaterias, promedioGeneral);
+
         return nuevoAlumno;
     }
 
@@ -165,8 +187,26 @@ export default class GestorColegio  {
     }
 
     crearProfesor() {
-        // creamos una instancia de la clase Profesor
+        // ejecuto la funcion preguntarDato que recibe por parametro la entidad (en este caso Profesor) y el dato a obtener. retorna un string, pero en edad, dni y salario lo convierto a number con parseInt. 
+        let nombre:string = preguntarDato("Profesor","NOMBRE");
+        let apellido:string = preguntarDato("Profesor","APELLIDO");
+        let edad:number = parseInt(preguntarDato("Profesor","EDAD"));
+        let dni:number = parseInt(preguntarDato("Profesor","DNI"));
+        let salario:number = parseInt(preguntarDato("Profesor","SALARIO"));
         
+        //se le asigna una id aleatoria de 7 caracteres:
+        let idProfesional: string = uuidv4().slice (0,7); 
+
+        //ejecuto la funcion seleccionarCurso (ambito Global) para mostrarle los materias de dicho curso. 
+        const cursoElegidoProfesor:Curso = seleccionarCurso(this.cursos,"Seleccione el CURSO donde se encuentra la MATERIA QUE DICTA: ");
+        //ejecuto la funcion seleccionarMaterias (ambito Global). las seleccionadas se guardan en la variable "materiaQueDicta".
+        const materiaquedicta:Materia[]= seleccionarMaterias(cursoElegidoProfesor, "Seleccione la materia o materias que dicta (Ingrese 0 una vez que finalice): ")
+        console.clear();
+
+        // creo el objeto Profesor con todos los datos obtenidos anteriormente:
+        const nuevoProfesor: Profesor = new Profesor (nombre, apellido, edad, dni,salario,idProfesional,materiaquedicta);
+        
+        return nuevoProfesor;
     }
 
     modificarProfesor() {
