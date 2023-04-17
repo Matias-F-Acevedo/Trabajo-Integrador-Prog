@@ -29,7 +29,7 @@ switch (numero) {
 
     case 1:
         console.clear()
-        // gestorDelColegioMatias.crearAlumno()
+        // gestorDelColegioMatias.crearProfesor()
         break;
 
     case 2:
