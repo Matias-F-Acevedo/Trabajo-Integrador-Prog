@@ -107,8 +107,10 @@ function seleccionarMaterias(curso:Curso, indicacion:string):Materia[] {
         if(materia!== -1 && nombredeLasMaterias[materia] != `---`){
             materiasSeleccionadas.push(curso.materias[materia])
             console.log(chalk.green(`Se ha matriculado a ${nombredeLasMaterias[materia]}`));
+            console.clear();
             nombredeLasMaterias.splice(materia,1,"---")
             }else {
+                console.clear();
                 console.log(chalk.red("Ya se matriculo a esa materia, seleccione una opcion valida"));
             }
         condicion=materia
@@ -155,6 +157,7 @@ export default class GestorColegio  {
             const nuevaNotaPorMateria: NotaPorMateria = new NotaPorMateria(materiasMatriculado[i],nota)
             // hago un push de el objeto en el array creado al principio(notasPorTodasLasMaterias)
             notasPorTodasLasMaterias.push(nuevaNotaPorMateria)
+            console.clear();
         }
 
 
@@ -177,7 +180,7 @@ export default class GestorColegio  {
 
     }
 
-    listarAlumno() {
+    listarAlumno(alumno:Alumno) {
     //    una vez creado el Alumno lo podremos pushear en el array Alumnos de la clase Colegio
 
     }
@@ -213,7 +216,7 @@ export default class GestorColegio  {
       // pediremos la caracteristica a modificar del profesor
     }
 
-    listarProfesor() {
+    listarProfesor(profesor:Profesor) {
     //    una vez creado el Profesor lo podremos pushear en el array Profesor de la clase Colegio
 
     }
