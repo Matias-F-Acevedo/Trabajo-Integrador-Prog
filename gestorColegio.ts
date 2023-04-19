@@ -2,6 +2,7 @@ const chalk = require('chalk');
 const { v4: uuidv4 } = require('uuid');
 const fs = require("fs")
 const readLineSync = require ("readline-sync")
+const {verificarExitencia, escribir, leer, guardar } = require('./funciones.ts')
 
 import { stringify } from "querystring";
 import Alumno from "./Alumno";
@@ -121,8 +122,8 @@ function seleccionarMaterias(curso:Curso, indicacion:string):Materia[] {
 
 
 export default class GestorColegio  {
-    alumnos: Alumno[]= []
-    profesores: Profesor[] = []
+    // alumnos: Alumno[]= []
+    // profesores: Profesor[] = []
     // hardcodeamos los cursos y por consecuencia las materias dentro de los mismos:
     cursos: Curso[]= [primero,segundo,tercero,cuarto,quinto,sexto]
 
@@ -176,17 +177,19 @@ export default class GestorColegio  {
     }
 
     modificarAlumno() {
-        // pediremos la caracteristica a modificar del alumno
+
+        
 
     }
 
     listarAlumno(alumno:Alumno) {
-    //    una vez creado el Alumno lo podremos pushear en el array Alumnos de la clase Colegio
-
+        guardar("./Data/alumnos.json", alumno)
+        
     }
 
     eliminarAlumno() {
-        // lo buscamos por DNI/otro dato y lo eliminadmos del Array alumno de la clase Colegio
+
+
     }
 
     crearProfesor() {
@@ -213,49 +216,124 @@ export default class GestorColegio  {
     }
 
     modificarProfesor() {
-      // pediremos la caracteristica a modificar del profesor
+
+
     }
 
     listarProfesor(profesor:Profesor) {
-    //    una vez creado el Profesor lo podremos pushear en el array Profesor de la clase Colegio
+
+
 
     }
 
     eliminarProfesor() {
-        // lo eliminamos del Array Profesor de la clase Colegio 
+
 
     }
 
     crearListadoDeAlumnos(){
-        // para esto usaremos el array de Alumnos de la clase Colegio, el cual lo convertiremos en un archivo .json (con stringify)
+
+
     }
 
     crearListadoDeProfesores(){
-       // para esto usaremos el array de Profesores de la clase Colegio, el cual lo convertiremos en un archivo .json (con stringify)
+
+
     }
 
     crearListadoDeunAlumno(){
-        // pediremos el alumno que se desea crear en una lista, lo buscamos y lo exportamos en un archivo .json. (con todas sus caracterisiticas: 
-        // materias que cursa, sus calificaciones y el promedio general)
+        // pregunto por consola el dni del alumno
+        let dniAlumno:number= parseInt(preguntarDato("ALUMNO","DNI"));
+        if(verificarExitencia("./Data/alumnos.json")){
+            // en caso de que exita el archivo con la direccion dada, lo convierto en objeto javascript y almaceno en un array.
+            let arrayDeTodosAlumnos: Alumno[]= leer("./Data/alumnos.json")
+            // busco el alumno que coincida con el dni proporcionado por consola.
+            const alumnoEncontrado = arrayDeTodosAlumnos.find(alumno => alumno.dni == dniAlumno)
+                if(alumnoEncontrado == undefined){
+                    console.log("");
+                    console.log(chalk.redBright(`NO se encontro el alumno con el dni: ${dniAlumno}`));
+                    console.log("");
+                }else {
+                    console.log("");
+                    console.log(chalk.greenBright(`Se ha encontrado el alumno y ha sido exportado a la siguiente direccion: ./Data/${alumnoEncontrado.nombre}-${alumnoEncontrado.apellido}.json`));
+                    console.log("");
+                    // creo un archivo con el alumno encontrado:
+                    fs.writeFileSync(`./Data/${alumnoEncontrado.nombre}-${alumnoEncontrado.apellido}.json`,JSON.stringify(alumnoEncontrado, null, 2));
+                }
+        }else {
+        console.log("");
+        // en el caso de que no exista el archivo:
+        console.log(chalk.redBright(`NO HAY ALUMNOS CREADOS PARA DAR UN LISTADO`));
+        console.log("");
+    }
     }
 
     crearListadoDeunProfesor(){
-        // pediremos el profesor que se desea crear en una lista, lo buscamos y lo exportamos en un archivo .json. (con todas sus caracterisiticas:         
-        // materia que dicta
-        // opcional: un profesor puede dictar mas de una materia)
+        //pregunto por consola el dni del profesor
+        let dniProfe:number= parseInt(preguntarDato("PROFESOR","DNI"));
+        if(verificarExitencia("./Data/profesores.json")){
+            // en caso de que exita el archivo con la direccion dada, lo convierto en objeto javascript y almaceno en un array.
+            let arrayDeTodosProfesores: Profesor[]= leer("./Data/profesores.json")
+            // busco el profesor que coincida con el dni proporcionado por consola.
+            const profesorEncontrado = arrayDeTodosProfesores.find(profesor => profesor.dni == dniProfe)
+                if(profesorEncontrado == undefined){
+                    console.log("");
+                    console.log(chalk.redBright(`NO se encontro el Profesor con el dni: ${dniProfe}`));
+                    console.log("");
+                }else {
+                    console.log("");
+                    console.log(chalk.greenBright(`Se ha encontrado el Profesor y ha sido exportado a la siguiente direccion: ./Data/${profesorEncontrado.nombre}-${profesorEncontrado.apellido}.json`));
+                    console.log("");
+                    // creo un archivo con el profesor encontrado:
+                    fs.writeFileSync(`./Data/${profesorEncontrado.nombre}-${profesorEncontrado.apellido}.json`,JSON.stringify(profesorEncontrado, null, 2));
+                }
+        }else {
+        console.log("");
+        // en el caso de que no exista el archivo:
+        console.log(chalk.redBright(`NO HAY PROFESORES CREADOS PARA DAR UN LISTADO`));
+        console.log("");
+    }
     }
 
     crearListadoDeProfesoresXAlumno(){
-        // aca tendremos que pedir el alumno que se desea saber los profesores y de objeto alumno buscaremos en que materias esta matriculado y a su vez accedemos a la propiedad profesor de cada materia.
+
+
     }
 
     crearListadoDeAlumnosXProfesor(){
-    // pediremos el profesor que se desea saber(verificamos que este contratado), lo buscaremos en el Array de Profesores que se encuentra en la clase Colegio. del objeto profesor buscamos en la propiedad "materiaquedicta", una vez encontrada la materia que da, la buscamos en el array de alumnos de la clase Colegio y de cada alumno buscamos la propiedad materiasMatriculado, en ese array encontraremos todas las conincidencias con la materia que dicta el profesor, creando un array el cual sera convertido en json. (explicado mas o menos, capaz hay que cambiar varias cosas)
+
+
     }
 
     listadoDetodosLosAlumnosConPromedios(){
-        // del array de alumnos de la clase colegio accedemos a la propiedad "promedio general" de cada uno y lo mostramos o convertimos en archivo .json
-    }
+        if(verificarExitencia("./Data/alumnos.json")){
+            // en caso de que exista el archivo lo convierto a objetos y lo almaceno en un array:
+            let arrayDealumnos: Alumno[]= leer("./Data/alumnos.json")
 
-    
+            let arrayAlumnosPromedio:object[] =[]
+            // creo un ciclo for para extraer del alumno las propiedades nombre, apellido y promediogeneral para crear un objeto:
+            for (let i = 0; i < arrayDealumnos.length; i++) {
+            let alumnoConSuPromedio = {
+                nombre: arrayDealumnos[i].nombre,
+                apellido: arrayDealumnos[i].apellido,
+                promedioGeneral: arrayDealumnos[i].promedioGeneral
+            }
+            // hago un push de cada objeto creado anteriormente en un array
+            arrayAlumnosPromedio.push(alumnoConSuPromedio)
+            }
+            // convierto el array a string y lo exporto en un archivo JSON.
+            fs.writeFileSync("./Data/alumnosPromedios.json",JSON.stringify(arrayAlumnosPromedio, null, 2));
+
+            console.log("");
+            console.log(chalk.greenBright(`Se ha creado el listado con exito`));
+            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Data/alumnosPromedios.json`));
+            console.log("");
+
+        }else {
+            console.log("");
+            // en caso de no haber un listado de alumnos:
+            console.log(chalk.redBright(`NO HAY ALUMNOS CREADOS PARA DAR UN LISTADO`));
+            console.log("");
+        }
+    }
 }
