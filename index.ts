@@ -14,8 +14,9 @@ let condicion:number = 0
 
  while(condicion !== -1){
 
- let opciones:string[] = [chalk.greenBright("Crear Alumno"),chalk.greenBright("Modificar Alumno"),chalk.greenBright("Eliminar Alumno"),chalk.greenBright("Crear Profesor"),chalk.greenBright("Modificar Profesor"),chalk.greenBright("Eliminar Profesor"),chalk.greenBright("Crear Listado de Alumnos"),chalk.greenBright("Crear Listado de Profesores"),chalk.greenBright("Crear listado de UN Alumno"),chalk.greenBright("Crear listado de UN Profesor"),chalk.greenBright("Crear listado de Profesores por Alumno"),chalk.greenBright("Crear listado de Alumnos por Profesor"),chalk.greenBright("Listado de Todos los Alumnos con su Promedio")];
+ let opciones:string[] = [chalk.greenBright("Crear Alumno"),chalk.greenBright("Modificar Alumno"),chalk.greenBright("Eliminar Alumno"),chalk.greenBright("Crear Profesor"),chalk.greenBright("Modificar Profesor"),chalk.greenBright("Eliminar Profesor"),chalk.greenBright("Crear listado de UN Alumno"),chalk.greenBright("Crear listado de UN Profesor"),chalk.greenBright("Crear listado de Profesores por Alumno"),chalk.greenBright("Crear listado de Alumnos por Profesor"),chalk.greenBright("Listado de Todos los Alumnos con su Promedio")];
 
+ 
  console.log(chalk.italic.bold.bgGreenBright.black('-----------------BIENVENIDO AL GESTOR DE LEGAJOS-----------------'));
  
  let numero = readLineSync.keyInSelect(opciones, chalk.bold.bgWhiteBright.black("Seleccione una opcion: "))
@@ -43,8 +44,8 @@ function listarModificarEliminarEntidad(entidad:string, accion:string){
         
     }else if(valor == 1){
         if(entidad.toLocaleLowerCase() == "alumno"){
-        // let alumnoModificado:Alumno = gestor.modificarAlumno();
-        // console.clear();
+        let alumnoModificado:Alumno[] = gestor.modificarAlumno();
+        console.clear();
         // alumnoNuevo = alumnoModificado;
         }else if(entidad.toLocaleLowerCase()== "profesor") {
         // let profesorModificado:Profesor = gestor.modificarProfesor();
@@ -106,37 +107,28 @@ switch (numero) {
         gestor.eliminarProfesor()
         
         break;
+
     case 6:
-        console.clear();
-        gestor.crearListadoDeAlumnos()
-        
-        break;
-    case 7:
-        console.clear();
-        gestor.crearListadoDeProfesores()
-        
-        break;       
-    case 8:
         console.clear();
         gestor.crearListadoDeunAlumno()
         
         break;
-    case 9:
+    case 7:
         console.clear();
         gestor.crearListadoDeunProfesor()
         
         break;
-    case 10:
+    case 8:
         console.clear();
         gestor.crearListadoDeProfesoresXAlumno()
         
         break;
-    case 11:
+    case 9:
         console.clear();
         gestor.crearListadoDeAlumnosXProfesor()
 
         break;        
-    case 12:
+    case 10:
         console.clear();
         gestor.listadoDetodosLosAlumnosConPromedios()
         break;

@@ -120,10 +120,72 @@ function seleccionarMaterias(curso:Curso, indicacion:string):Materia[] {
 }
 
 
+//creo una funcion para reutilizar el codigo en alumnos y profesores, la misma recibe por parametro una entidad (alumno o profesor) y una direccion del archivo JSON:
+function eliminarEntidad(entidad:string, direccionArchivo:string){
+    // pregunto por consola el dni de la entidad
+    let dniEntidad:number= parseInt(preguntarDato(entidad,"DNI"));
+    // verifico si existe el archivo (la funcion retorno true o false)
+    if(verificarExitencia(direccionArchivo)){
+        // guardo el archivo json convertido a objeto(funcion leer) en el array:
+        let listadoProfesores: Profesor[]= leer(direccionArchivo)
+        // busca en el listado de la entidad a la entidad que coincida con el dni brindado.
+        let eliminarAlumno = listadoProfesores.findIndex(profesor => profesor.dni == dniEntidad);
+        // si encuentra a la entidad:
+        if (eliminarAlumno >= 0){
+            console.clear();
+            console.log(chalk.greenBright(`${entidad} encontrado con EXITO`));
+            // compruebo que quiera realmente eliminar a la entidad
+            let opciones:string[] = [chalk.greenBright("SI"),chalk.redBright("NO")];
+            console.log(chalk.redBright(`ESTA SEGURO QUE QUIERE ELIMINAR AL ${entidad} CON EL DNI: ${dniEntidad}`));
+            // tiene que elegir una opcion(si o no/cancel)
+            let numero = readLineSync.keyInSelect(opciones, chalk.bold.bgWhiteBright.black("Seleccione una opcion: "))
+
+            switch (numero) {
+                case -1:
+                    // en caso de que seleccione la opcion "cancel"
+                    console.clear();
+                    console.log(chalk.greenBright("Volviendo al menu de inicio..."));
+                    console.log("");
+                    break;
+                case 0:
+                    // en caso de que seleccione la opcion "si" (eliminar entidad):
+                    // se eliminar la entidad:
+                    listadoProfesores.splice(eliminarAlumno, 1)
+                    console.clear();
+                    console.log(chalk.greenBright(`El ${entidad} con el Dni: ${dniEntidad} HA SIDO ELIMINADO CON EXITO`));
+                    console.log("");
+                    // sobreescribo/remplazo el archivo anterior con el nuevo(con la entidad eliminada).
+                    escribir(listadoProfesores,direccionArchivo)
+                    break;
+                case 1:
+                    // en caso de que seleccione la opcion "no":
+                    console.clear();
+                    console.log(chalk.greenBright("Volviendo al menu de inicio..."));
+                    console.log("");
+                    break;
+                default:
+                    break;
+            }
+        // si NO encuentra a la entidad:
+        } else {
+             console.clear();
+             console.log(chalk.redBright(`El ${entidad} con el Dni: ${dniEntidad} NO HA SIDO ENCONTRADO O HA INGRESADO UN DNI INCORRECTO`));
+             console.log("");
+             
+        }
+    }else {
+        console.log("");
+        // en el caso de que no exista el archivo:
+        console.log(chalk.redBright(`NO HAY ${entidad} CREADOS PARA DAR UN LISTADO Y ELIMINAR`));
+        console.log("");
+    }
+}
+
+// ------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------
 
 export default class GestorColegio  {
-    // alumnos: Alumno[]= []
-    // profesores: Profesor[] = []
     // hardcodeamos los cursos y por consecuencia las materias dentro de los mismos:
     cursos: Curso[]= [primero,segundo,tercero,cuarto,quinto,sexto]
 
@@ -176,11 +238,80 @@ export default class GestorColegio  {
         return nuevoAlumno;
     }
 
-    modificarAlumno() {
+    modificarAlumno():Alumno[] {
 
+        let arrayDeModificarAlumnos: Alumno[]= leer("./Data/alumnos.json")
+        let arraynuevo:Alumno[]=[]
+        let dni: number = parseInt(readLineSync.question(chalk.greenBright(`Escriba el dni del alumno: `)).toLocaleLowerCase());
+
+        let indice: number = arrayDeModificarAlumnos.findIndex((elem: { dni: number; }) => elem.dni === dni);
+        if (indice === -1) {
+           console.log("el alumno no existe")
+
+       }else if(indice >= 0){
+       
+       let propiedad:string = readLineSync.question(chalk.greenBright(`Escriba el la carecteristica a modificar: `)).toLocaleLowerCase();
+
+       let dato:string = readLineSync.question(chalk.greenBright(`Escriba el nuevo dato: `)).toLocaleLowerCase();
+
+       let caracteristica:string = propiedad;
+         switch (caracteristica) {
+           case "nombre":
+               arrayDeModificarAlumnos[indice].nombre= dato
+               console.log("se acutualizo el nombre de ", arrayDeModificarAlumnos[indice]);
+               arraynuevo.push(arrayDeModificarAlumnos[indice])
+               break;
+           case "apellido":
+               arrayDeModificarAlumnos[indice].apellido= dato
+               console.log("se acutualizo el apellido de ", arrayDeModificarAlumnos[indice]);
+               break;
+           case "edad":
+               arrayDeModificarAlumnos[indice].edad=parseInt(dato)  
+               console.log("se acutualizo la edad de ", arrayDeModificarAlumnos[indice]);                
+               break;
+           case "curso":
+               let cursoAModificar:Curso = seleccionarCurso(this.cursos, "seleccione el curso")
+               arrayDeModificarAlumnos[indice].curso = cursoAModificar
+                console.log("se acutualizo el curso de ", arrayDeModificarAlumnos[indice]);
+               break;
+            case "materias":
+                let materiasAmodificar:Materia[]= seleccionarMaterias(this.cursos[0],"seleccione las materias a las que se desea matricular: ")
+                arrayDeModificarAlumnos[indice].materiasMatriculado = materiasAmodificar
+                console.log("se acutualizo la materia de ", arrayDeModificarAlumnos[indice]);
+
+            case "notapormaterias":
+
+            const notasPorTodasLasMaterias: NotaPorMateria[]=[];
         
+        // ciclo for para recorrer el array de materiasMatriculado del alumno:
+        for (let i = 0; i < arrayDeModificarAlumnos[indice].materiasMatriculado.length; i++) {
+            // por cada iteracion le brindo el nombre de la materia, para que el usuario ingrese la nota de la misma:
+            let nota = Number(readLineSync.question(`Escriba la nota de la materia ${arrayDeModificarAlumnos[indice].materiasMatriculado[i].nombre}: `));
+            // creo un objeto "notaPorMateria" que recibe por parametro el nombre de la materia(lo saco del array"arrayDeModificarAlumnos[indice].materiasMatriculado:string") y la nota que le asigno anteriormente:
+            const nuevaNotaPorMateria: NotaPorMateria = new NotaPorMateria(arrayDeModificarAlumnos[indice].materiasMatriculado[i],nota)
+            // hago un push de el objeto en el array creado al principio(notasPorTodasLasMaterias)
+            notasPorTodasLasMaterias.push(nuevaNotaPorMateria)
+            console.clear();
+            arrayDeModificarAlumnos[indice].notaPorMateria = notasPorTodasLasMaterias;
 
+
+            let acumulador:number = 0
+            for (let i = 0; i < notasPorTodasLasMaterias.length; i++) {
+                acumulador = acumulador+ notasPorTodasLasMaterias[i].nota
+            }
+            let promedioGeneral:number = acumulador / notasPorTodasLasMaterias.length
+            arrayDeModificarAlumnos[indice].promedioGeneral = promedioGeneral;
+        }
+           default:
+               console.log(`NO SE HA ENCONTRADO LA CARACTERISTICA`);
+         }
+       }
+       
+    
+       guardar("./Data/alumnos.json",arraynuevo)
+       return arrayDeModificarAlumnos;
     }
+
 
     listarAlumno(alumno:Alumno) {
         guardar("./Data/alumnos.json", alumno)
@@ -188,8 +319,7 @@ export default class GestorColegio  {
     }
 
     eliminarAlumno() {
-
-
+        eliminarEntidad("Alumno","./Data/alumnos.json")
     }
 
     crearProfesor() {
@@ -221,25 +351,13 @@ export default class GestorColegio  {
     }
 
     listarProfesor(profesor:Profesor) {
-
-
-
+        guardar("./Data/profesores.json", profesor)
     }
 
     eliminarProfesor() {
-
-
+        eliminarEntidad("Profesor","./Data/profesores.json")
     }
-
-    crearListadoDeAlumnos(){
-
-
-    }
-
-    crearListadoDeProfesores(){
-
-
-    }
+    
 
     crearListadoDeunAlumno(){
         // pregunto por consola el dni del alumno
@@ -297,10 +415,37 @@ export default class GestorColegio  {
 
     crearListadoDeProfesoresXAlumno(){
 
+        // let arrayDeAlumnos: Alumno[]= leer("./Data/alumnos.json")
+
+        //         let alumnoColegio = arrayDeAlumnos.find((alumno: {dni: number}) => alumno.dni === arrayDeAlumnos[0].dni);
+
+        //         let profesores: string[] = alumnoColegio.subjects.map((subject: {profesor: string}) => subject.profesor);
+
+        //         console.log(`Los profesores de ${alumnoColegio.dni} son: ${profesores.join(", ")}`);
 
     }
 
     crearListadoDeAlumnosXProfesor(){
+    //     let arrayDeAlumnos: Alumno[]= leer("./Data/alumnos.json")
+
+    //     let profesorColegio = profesores.find((profesor: {dni: number}) => profesor.dni === dni);
+
+    //     if (!profesorColegio) {
+    //      console.log(`No se encontró ningún profesor con el DNI ${dni}.`);
+    //       return;
+    //     }
+    //     else{
+    //   let materiaQueDicta = profesorColegio.materiaQuedicta;
+    //   let alumnos = arrayDeAlumnos.filter(alumno => {
+    //       return alumno.materiasMatriculado.includes(materiaQueDicta);
+    //     });
+    //   if (alumnos.length === 0) {
+    //       console.log(`No se encontraron alumnos matriculados en la materia ${materiaQueDicta}.`);
+    //       return;
+    //     }
+    //     let nombresAlumnos = alumnos.map(alumno => alumno.nombre);
+    //   console.log(`Los alumnos de ${profesorColegio.nombre} que están matriculados en ${materiaQueDicta} son: ${nombresAlumnos.join(", ")}`);
+    //   }
 
 
     }
