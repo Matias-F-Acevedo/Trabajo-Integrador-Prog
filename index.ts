@@ -28,8 +28,8 @@ let alumnoNuevo:Alumno
 let profesorNuevo: Profesor
 
 
-function listarModificarEliminarEntidad(entidad:string, accion:string){
-    let opcionesAlumno:string[] =[chalk.greenBright(`Listar ${entidad}`),chalk.yellowBright(`Modificar ${entidad}`),chalk.redBright(`Eliminar ${entidad}`)]
+function listarEliminarEntidad(entidad:string, accion:string){
+    let opcionesAlumno:string[] =[chalk.greenBright(`Listar ${entidad}`),chalk.redBright(`Eliminar ${entidad}`)]
     let valor = readLineSync.keyInSelect(opcionesAlumno, chalk.bold.bgWhiteBright.black(`Que quiere hacer con el Alumno ${accion}: `));
 
     if( valor === 0){
@@ -43,25 +43,14 @@ function listarModificarEliminarEntidad(entidad:string, accion:string){
         console.log("");
         
     }else if(valor == 1){
-        if(entidad.toLocaleLowerCase() == "alumno"){
-        let alumnoModificado:Alumno[] = gestor.modificarAlumno();
-        console.clear();
-        // alumnoNuevo = alumnoModificado;
-        }else if(entidad.toLocaleLowerCase()== "profesor") {
-        // let profesorModificado:Profesor = gestor.modificarProfesor();
-        // console.clear();
-        // profesorNuevo = profesorModificado;
-        }
-        console.clear()
-        console.log(chalk.yellowBright(`El ${entidad} ha sido modificado con exito`));
-        listarModificarEliminarEntidad(entidad,"MODIFICADO")
-        
-    }else if(valor == 2){
         console.clear();
         console.log(chalk.redBright(`El ${entidad} ha sido eliminado con exito`));
         console.log("");
-    }else{
-        console.clear()
+        
+    }else {
+        console.clear();
+        console.log(chalk.redBright(`El ${entidad} ha sido eliminado con exito`));
+        console.log("");
     }
 }
 
@@ -76,7 +65,7 @@ switch (numero) {
         console.clear();
         alumnoNuevo = gestor.crearAlumno();
         console.clear();
-        listarModificarEliminarEntidad("ALUMNO","CREADO")
+        listarEliminarEntidad("ALUMNO","CREADO")
         break;
 
     case 1:
@@ -93,7 +82,7 @@ switch (numero) {
         console.clear();
         profesorNuevo = gestor.crearProfesor();
         console.clear();
-        listarModificarEliminarEntidad("PROFESOR","CREADO")
+        listarEliminarEntidad("PROFESOR","CREADO")
         
         break;        
     case 4:
