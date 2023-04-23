@@ -7,22 +7,21 @@ import NotaPorMateria from "./notaPorMateria";
 export default class Alumno implements Persona {
     nombre: string;
     apellido: string;
-    edad: number;
+    fechaDeNacimiento:Date;
     dni: number;
-    // la matricula esta por ahora de tipo number, pero debe ir una id aleatoria(la cual se le deberia de asignar desde la funcion del gestor "crear alumno"):
-    matricula:number
+    id:string;
     curso: Curso; 
     materiasMatriculado:Materia[]
     notaPorMateria:NotaPorMateria[];
     promedioGeneral: number;
     
 
-    constructor(nombre:string, apellido:string, edad:number, dni:number, matricula:number, curso:Curso, materiasMatriculado: Materia[], notaPorMateria:NotaPorMateria[], promedioGeneral: number){
+    constructor(nombre:string, apellido:string, fechaDeNacimiento:Date, dni:number, id:string, curso:Curso, materiasMatriculado: Materia[], notaPorMateria:NotaPorMateria[], promedioGeneral: number){
         this.nombre= nombre;
         this.apellido= apellido;
-        this.edad= edad;
+        this.fechaDeNacimiento= fechaDeNacimiento;
         this.dni= dni;
-        this.matricula= matricula;
+        this.id= id;
         this.curso= curso;
         this.materiasMatriculado= materiasMatriculado;
         this.notaPorMateria= notaPorMateria;
