@@ -179,9 +179,11 @@ function eliminarEntidad(entidad:string, direccionArchivo:string){
 
 
 function crearlistaDeUnaEntidad(entidad:string, direccionlistadoDeEntidades:string){
-    // pregunto por consola el ID de la entidad
-    let idEntidad:string= preguntarDato(entidad,"ID");
+    // verifico si el archivo proporcionado existe:
     if(verificarExitencia(direccionlistadoDeEntidades)){
+        // pregunto por consola el ID de la entidad
+        let idEntidad:string= preguntarDato(entidad,"ID");
+
             // creo una variable donde se almacena el indice de la entidad a listar:
             let entidadEncontrada:number;
             // creo una variable que despues sera igual a un array de alumnos o profesores (depende del if que le sigue)

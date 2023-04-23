@@ -65,15 +65,14 @@ let cuarto:Curso= new Curso("Cuarto",materiasDeCuarto);
 let quinto:Curso= new Curso("Quinto",materiasDeQuinto);
 let sexto:Curso= new Curso("Sexto",materiasDeSexto);
 
-
+// creo un array de cursos, donde hardcodeamos los creados anteriormente:
+let cursos: Curso[]= [primero,segundo,tercero,cuarto,quinto,sexto]
 
 // ------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------
 
-export default class GestorColegio  {
-    // hardcodeamos los cursos y por consecuencia las materias dentro de los mismos:
-     cursos: Curso[]= [primero,segundo,tercero,cuarto,quinto,sexto]
+export default class GestorColegio {
 
 
     crearAlumno() {
@@ -84,7 +83,7 @@ export default class GestorColegio  {
         let dni:number = parseInt(preguntarDato("Alumno","DNI"));
 
         // ejecuto la funcion "seleccionarCurso" (ambito Global) y el retorno se guarda en la variable cursoElegido 
-        const cursoElegidoAlumno:Curso = seleccionarCurso(this.cursos,"Seleccione el curso: ");
+        const cursoElegidoAlumno:Curso = seleccionarCurso(cursos,"Seleccione el curso: ");
         console.clear();
 
         //se le asigna a idAlumno una id aleatoria de 7 caracteres:
@@ -124,28 +123,28 @@ export default class GestorColegio  {
     }
 
     modificarAlumno(){
-
+        // verificamos si el archivo donde se encuentran los alumnos existe:
         if(verificarExitencia("./Data/alumnos.json")){
-
+        // guardoamos los alumnos en un array (convertidos a objetos)
         let arrayDeModificarAlumnos: Alumno[]= leer("./Data/alumnos.json")
-
+        // pregunto la id de el alumno a buscar:
         let idAlumno:string =preguntarDato("Alumno a Modificar","ID");
-      
+        // busco el alumno indicado en el array de Alumnos:
         let indice: number = arrayDeModificarAlumnos.findIndex(alumno => alumno.id == idAlumno);
-
+        // en caso de que no lo encuentre retorna -1:
         if (indice === -1) {
            console.clear();
            console.log(chalk.redBright(`La Id: ${idAlumno} NO pertenece a ningun Alumno en el sistema`))
            console.log("");
-           
+        // si retorna >= 0 (indice del alumno encontrado):   
         }else if(indice >= 0){
-
+        // menu de opciones para modificar al alumno.
          let opcionesAmodificar:string[] =[chalk.greenBright(`Modificar Nombre`),chalk.greenBright(`Modificar Apellido`),chalk.greenBright(`Modificar Fecha De Nacimiento`),chalk.greenBright(`Modificar Dni`),chalk.greenBright(`Modificar Curso`),chalk.greenBright(`Modificar Materias Matriculado`),chalk.greenBright(`Modificar Nota Por Materia`)]
-
+        // muestro por consola en nombre y apelllido del alumno, para que mas intuitivo:
          console.log(chalk.whiteBright(`Alumno: ${arrayDeModificarAlumnos[indice].nombre}, ${arrayDeModificarAlumnos[indice].apellido}`));
-
+        // le digo que seleccione una opcion del menu anterior:
         let valor = readLineSync.keyInSelect(opcionesAmodificar, chalk.bold.bgWhiteBright.black(`Seleccione la opcion a modificar del Alumno `));
-    
+        // creamos un switch con los casos que corresponda a la opcion elegida:
          switch (valor) {
            case 0:
                console.clear();
@@ -185,13 +184,13 @@ export default class GestorColegio  {
 
            case 4:
                console.clear();
-               let cursoAModificar:Curso = seleccionarCurso(this.cursos, `Seleccione nuevo curso del Alumno`)
+               let cursoAModificar:Curso = seleccionarCurso(cursos, `Seleccione nuevo curso del Alumno`)
 
                arrayDeModificarAlumnos[indice].curso = cursoAModificar
                console.clear();
                console.log(chalk.greenBright(`Se ha actualizado con exito la propiedad: CURSO del Alumno`));
                 
-            //    materiasssssssssssssssssssssssssssssssssssssssss}
+            // si cambia de curso, por consecuencia cambia de materias:
 
                 let materiasDelnuevoCurso:Materia[]= seleccionarMaterias(arrayDeModificarAlumnos[indice].curso,`Seleccione las Nuevas Materias a las que se desea Matricular: `)
 
@@ -201,59 +200,57 @@ export default class GestorColegio  {
 
                 console.log(chalk.greenBright(`Se ha actualizado con exito la propiedad: Materias del Alumno`));
 
-        // nota por materiasssssssssssssssssssssssssssssssssssssssss
+            // si cambia de materias, por consecuencia cambia de nota por materia.
 
-            const notasDeLasNuevasMaterias: NotaPorMateria[]=[];
+                const notasDeLasNuevasMaterias: NotaPorMateria[]=[];
         
-            for (let i = 0; i < arrayDeModificarAlumnos[indice].materiasMatriculado.length; i++) {
+                for (let i = 0; i < arrayDeModificarAlumnos[indice].materiasMatriculado.length; i++) {
             
-            let nota = Number(readLineSync.question(`Escriba la nota de la materia ${arrayDeModificarAlumnos[indice].materiasMatriculado[i].nombre}: `));
+                let nota = Number(readLineSync.question(`Escriba la nota de la materia ${arrayDeModificarAlumnos[indice].materiasMatriculado[i].nombre}: `));
             
-            const nuevaNotaPorMateria: NotaPorMateria = new NotaPorMateria(arrayDeModificarAlumnos[indice].materiasMatriculado[i],nota)
+                const nuevaNotaPorMateria: NotaPorMateria = new NotaPorMateria(arrayDeModificarAlumnos[indice].materiasMatriculado[i],nota)
            
-            notasDeLasNuevasMaterias.push(nuevaNotaPorMateria)
+                notasDeLasNuevasMaterias.push(nuevaNotaPorMateria)
 
-            console.clear();
-            }
+                console.clear();
+                }
 
-            arrayDeModificarAlumnos[indice].notaPorMateria = notasDeLasNuevasMaterias;
-            console.clear();
-            console.log(chalk.greenBright(`Se ha actualizado con exito la propiedad: Nota por Materia del Alumno`));
-            console.log("");
+             arrayDeModificarAlumnos[indice].notaPorMateria = notasDeLasNuevasMaterias;
+             console.clear();
+             console.log(chalk.greenBright(`Se ha actualizado con exito la propiedad: Nota por Materia del Alumno`));
+             console.log("");
             
 
-        // promedioooooooooooooooooo
-            let acumulador:number = 0
-            for (let i = 0; i < notasDeLasNuevasMaterias.length; i++) {
+            // si cambia de nota por materia, por consecuencia cambia de promedio:
+                let acumulador:number = 0
+                for (let i = 0; i < notasDeLasNuevasMaterias.length; i++) {
                 acumulador = acumulador+ notasDeLasNuevasMaterias[i].nota
-            }
-            let promedioGeneral:number = acumulador / notasDeLasNuevasMaterias.length
-            arrayDeModificarAlumnos[indice].promedioGeneral = promedioGeneral;
-
-            // escribir(arrayDeModificarAlumnos,"./Data/alumnos.json")
-            break;
+                }
+                let promedioGeneral:number = acumulador / notasDeLasNuevasMaterias.length
+                arrayDeModificarAlumnos[indice].promedioGeneral = promedioGeneral;
+             break;
 
 
         case 5:
+            // en caso de que solo quiera cambiar las materias a las que esta matriculado:
             console.clear();
             let materiasAmodificar:Materia[]= seleccionarMaterias(arrayDeModificarAlumnos[indice].curso,`Seleccione las nuevas materias a las que se desea matricular: `)
 
             arrayDeModificarAlumnos[indice].materiasMatriculado = materiasAmodificar
             console.clear();
             console.log(chalk.greenBright(`Se ha actualizado con exito la propiedad: MATERIAS del Alumno`));
-
             break;
 
         case 6:
+            // en caso de actualizar solamente las notas:
             console.clear();
             const notasPorTodasLasMaterias: NotaPorMateria[]=[];
-        
             for (let i = 0; i < arrayDeModificarAlumnos[indice].materiasMatriculado.length; i++) {
-            
+    
             let nota = Number(readLineSync.question(`Escriba la nota de la materia ${arrayDeModificarAlumnos[indice].materiasMatriculado[i].nombre}: `));
-            
+
             const nuevaNotaPorMateria: NotaPorMateria = new NotaPorMateria(arrayDeModificarAlumnos[indice].materiasMatriculado[i],nota)
-           
+
             notasPorTodasLasMaterias.push(nuevaNotaPorMateria)
 
             console.clear();
@@ -270,6 +267,7 @@ export default class GestorColegio  {
                console.log(``);
          }
     }
+    // sobreescribo el archivo anterior por otro con los datos actualizados:
     escribir(arrayDeModificarAlumnos,"./Data/alumnos.json")
 
         }else {
@@ -304,7 +302,7 @@ export default class GestorColegio  {
         let idProfesor: string = uuidv4().slice (0,7); 
 
         //ejecuto la funcion seleccionarCurso (ambito Global) para mostrarle los materias de dicho curso. 
-        const cursoElegidoProfesor:Curso = seleccionarCurso(this.cursos,"Seleccione el CURSO donde se encuentra la MATERIA QUE DICTA: ");
+        const cursoElegidoProfesor:Curso = seleccionarCurso(cursos,"Seleccione el CURSO donde se encuentra la MATERIA QUE DICTA: ");
         //ejecuto la funcion seleccionarMaterias (ambito Global). las seleccionadas se guardan en la variable "materiaQueDicta".
         const materiaquedicta:Materia[]= seleccionarMaterias(cursoElegidoProfesor, "Seleccione la materia o materias que dicta (Ingrese 0 una vez que finalice): ")
         console.clear();
@@ -316,28 +314,28 @@ export default class GestorColegio  {
     }
 
     modificarProfesor() {
-
+        // verifico si el archivo existe:
         if(verificarExitencia("./Data/profesores.json")){
-
+            // guardo los profesores convertido a objetos en un array:
             let arrayDeModificarProfesores: Profesor[]= leer("./Data/profesores.json")
-    
+            // pregunto por consola el id del profesor 
             let idProfe:string =preguntarDato("Profesor a Modificar","ID");
-          
+            // busco al profesor que coincida con el id proporcionado (retorna el indice del mismo)
             let indice: number = arrayDeModificarProfesores.findIndex(profesor => profesor.id == idProfe);
-    
+            // en caso de no encontrarlo (retorna -1)
             if (indice === -1) {
                console.clear();
                console.log(chalk.redBright(`La Id: ${idProfe} NO pertenece a ningun Profesor en el sistema`))
                console.log("");
-               
+            //  si lo encontro:  
             }else if(indice >= 0){
-    
+            // menu de opciones a editar del profesor:
              let opcionesAmodificar:string[] =[chalk.greenBright(`Modificar Nombre`),chalk.greenBright(`Modificar Apellido`),chalk.greenBright(`Modificar Fecha De Nacimiento`),chalk.greenBright(`Modificar Dni`),chalk.greenBright(`Modificar Salario`),chalk.greenBright(`Modificar Materia/as que Dicta`)]
-    
+            // muestro por consola el nombre y apellido del profesor para que sea mas intuitivo: 
              console.log(chalk.whiteBright(`Profesor: ${arrayDeModificarProfesores[indice].nombre}, ${arrayDeModificarProfesores[indice].apellido}`));
-    
+            // le digo que seleccione una opcion del menu anterior:  
             let valor = readLineSync.keyInSelect(opcionesAmodificar, chalk.bold.bgWhiteBright.black(`Seleccione la opcion a modificar del Profesor `));
-        
+            // creo un switch con cada caso especifico segun seleccione:
              switch (valor) {
                case 0:
                    console.clear();
@@ -387,7 +385,7 @@ export default class GestorColegio  {
                case 5:
                    console.clear();
     
-                   const cursoElegidoProfesor:Curso = seleccionarCurso(this.cursos,"Seleccione el CURSO donde se encuentra la MATERIA QUE DICTA: ");
+                   const cursoElegidoProfesor:Curso = seleccionarCurso(cursos,"Seleccione el CURSO donde se encuentra la MATERIA QUE DICTA: ");
                    
                     console.clear();
                    const materiaNuevaquedicta:Materia[]= seleccionarMaterias(cursoElegidoProfesor, "Seleccione la materia o materias que dicta (Ingrese 0 una vez que finalice): ")
@@ -402,6 +400,7 @@ export default class GestorColegio  {
                    console.log(``);
              }
         }
+        // sobreescribo el archivo anterior con otro pero con los datos editados.
         escribir(arrayDeModificarProfesores,"./Data/profesores.json")
     
             }else {
@@ -512,13 +511,9 @@ export default class GestorColegio  {
             for (let i = 0; i < arrayDeAlumnos.length; i++) {
                 for (let j = 0; j < arrayDeAlumnos[i].materiasMatriculado.length; j++) { 
                     for (let h = 0; h < materiasQueDictaProf.length; h++) {
-                        // preguntamos si el alumno pepito en la propiedad materiasMatriculado.nombre incluye la materia que dicta el profesor(retorna true o false):
+                        // preguntamos si el alumno pepito en la propiedad materiasMatriculado.id incluye la materia que dicta el profesor(retorna true o false):
                         let buscarAlumnoDelProfesor = arrayDeAlumnos[i].materiasMatriculado[j].id.includes(materiasQueDictaProf[h].id);
                         // condicion en caso de que encuentre la coincidencia y otra condicion donde preguntamos si el alumno encontrado ya esta dentro del array donde los vamos a almacenar (es para no pushear dos o mas veces el mismo alumno):
-
-                        console.log(buscarAlumnoDelProfesor);
-     
-
                         if(buscarAlumnoDelProfesor== true && alumnosDelProfesor.includes(arrayDeAlumnos[i])==false){
                             alumnosDelProfesor.push(arrayDeAlumnos[i])
                         } 
