@@ -14,7 +14,7 @@ let condicion:number = 0
 
  while(condicion !== -1){
 
- let opciones:string[] = [chalk.greenBright("Crear Alumno"),chalk.greenBright("Modificar Alumno"),chalk.greenBright("Eliminar Alumno"),chalk.greenBright("Crear Profesor"),chalk.greenBright("Modificar Profesor"),chalk.greenBright("Eliminar Profesor"),chalk.greenBright("Crear listado de UN Alumno"),chalk.greenBright("Crear listado de UN Profesor"),chalk.greenBright("Crear listado de Profesores por Alumno"),chalk.greenBright("Crear listado de Alumnos por Profesor"),chalk.greenBright("Listado de Todos los Alumnos con su Promedio")];
+ let opciones:string[] = [chalk.greenBright("Crear Alumno"),chalk.greenBright("Modificar Alumno"),chalk.greenBright("Eliminar Alumno"),chalk.greenBright("Crear Profesor"),chalk.greenBright("Modificar Profesor"),chalk.greenBright("Eliminar Profesor"),chalk.greenBright("Crear listado de UN Alumno"),chalk.greenBright("Crear listado de UN Profesor"),chalk.greenBright("Crear listado de Profesores por Alumno"),chalk.greenBright("Crear listado de Alumnos por Profesor"),chalk.greenBright("Listado de Todos los Alumnos con su Promedio"),chalk.greenBright("Listado de Alumnos con datos basicos"),chalk.greenBright("Listado de Profesores con datos basicos")];
 
  
  console.log(chalk.italic.bold.bgGreenBright.black('-----------------BIENVENIDO AL GESTOR DE LEGAJOS-----------------'));
@@ -120,6 +120,15 @@ switch (numero) {
     case 10:
         console.clear();
         gestor.listadoDetodosLosAlumnosConPromedios()
+        break;
+
+    case 11:
+        console.clear();
+        gestor.listadoDeAlumnos()
+        break;
+    case 12:
+        console.clear();
+        gestor.listadoDeProfesores()
         break;
 
     default:
