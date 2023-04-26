@@ -575,4 +575,87 @@ export default class GestorColegio {
             console.log("");
         }
     }
+
+    listadoDeAlumnos(){
+        if(verificarExitencia("./Data/alumnos.json")){
+            let todosAlumnos:Alumno[]= leer("./Data/alumnos.json");
+            let alumnosDatosBasicos:any[]= []
+            for (let i = 0; i < todosAlumnos.length; i++) {
+            
+                let alumno = {
+                    nombre: todosAlumnos[i].nombre,
+                    apellido: todosAlumnos[i].apellido,
+                    dni: todosAlumnos[i].dni,
+                    id: todosAlumnos[i].id
+                }
+            alumnosDatosBasicos.push(alumno) 
+            }
+            // ordenamos alfabeticamente los objetos por la propiedad apellido:
+            let alumnosOrdenados:any = alumnosDatosBasicos.sort((o1,o2)=> {
+                // objeto1 es MENOR a objeto2 lexicograficamente
+             if(o1.apellido < o2.apellido){
+                    return -1;
+                // objeto1 es MAYOR a objeto2 lexicograficamente
+             }else if (o1.apellido > o2.apellido){
+                    return 1;
+                // objeto1 es IGUAL a objeto2 lexicograficamente
+            } else {
+                    return 0;
+                }
+            })
+            fs.writeFileSync("./Data/listado-alumnos.json",JSON.stringify(alumnosOrdenados, null, 2))
+
+            console.log("");
+            console.log(chalk.greenBright(`Se ha creado el listado de Alumnos (ordenado alfabeticamente) con exito!`));
+            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Data/listado-alumnos.json`));
+            console.log("");
+        }else {
+            console.log("");
+            // en caso de no haber un listado de alumnos:
+            console.log(chalk.redBright(`NO HAY ALUMNOS CREADOS PARA DAR UN LISTADO`));
+            console.log("");
+        }
+    }
+
+    listadoDeProfesores(){
+        if(verificarExitencia("./Data/profesores.json")){
+            let todosProfesores:Profesor[]= leer("./Data/profesores.json");
+            let profesoresDatosBasicos:any[]= []
+            for (let i = 0; i < todosProfesores.length; i++) {
+                
+                let profesor = {
+                    nombre: todosProfesores[i].nombre,
+                    apellido: todosProfesores[i].apellido,
+                    dni: todosProfesores[i].dni,
+                    id: todosProfesores[i].id
+                }
+                profesoresDatosBasicos.push(profesor)
+            }
+            // ordenamos alfabeticamente los objetos por la propiedad apellido:
+            let profesoresOrdenados:any = profesoresDatosBasicos.sort((o1,o2)=> {
+                // objeto1 es MENOR a objeto2 lexicograficamente
+                if(o1.apellido < o2.apellido){
+                    return -1;
+                // objeto1 es MAYOR a objeto2 lexicograficamente
+                }else if (o1.apellido > o2.apellido){
+                    return 1;
+                // objeto1 es IGUAL a objeto2 lexicograficamente
+                } else {
+                    return 0;
+                }
+            })
+            fs.writeFileSync("./Data/listado-profesores.json",JSON.stringify(profesoresOrdenados, null, 2))
+
+            console.log("");
+            console.log(chalk.greenBright(`Se ha creado el listado de Profesores (ordenado alfabeticamente) con exito!`));
+            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Data/listado-profesores.json`));
+            console.log("");
+        }else {
+            console.log("");
+            // en caso de no haber un listado de Profesores:
+            console.log(chalk.redBright(`NO HAY PROFESORES CREADOS PARA DAR UN LISTADO`));
+            console.log("");
+        }
+    }
 }
+
