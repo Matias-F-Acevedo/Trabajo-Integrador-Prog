@@ -467,9 +467,9 @@ export default class GestorColegio {
                 // condicion que para crear el archivo. En el array debe haber al menos un elemento(profesor):
                 if(profesoresDelAlumno.length > 0){
                     console.log("");
-                    console.log(chalk.greenBright(`Se ha creado el listado y el mismo ha sido exportado a la siguiente direccion: ./Data/ProfesoresDe${AlumnoSolicitado.nombre.toLocaleUpperCase()}(${AlumnoSolicitado.id}).json`));
+                    console.log(chalk.greenBright(`Se ha creado el listado y el mismo ha sido exportado a la siguiente direccion: ./Listados/ProfesoresDe${AlumnoSolicitado.nombre.toLocaleUpperCase()}(${AlumnoSolicitado.id}).json`));
                     console.log("");
-                    escribir(profesoresDelAlumno,`./Data/profesoresDe${AlumnoSolicitado.nombre.toLocaleUpperCase()}(${AlumnoSolicitado.id}).json`)
+                    escribir(profesoresDelAlumno,`./Listados/profesoresDe${AlumnoSolicitado.nombre.toLocaleUpperCase()}(${AlumnoSolicitado.id}).json`)
                 // en caso de que no tenga ningun elemento el array(osea que no hay profesores)
                 }else {
                     console.log(chalk.redBright(`El alumno con el ID: ${AlumnoSolicitado.id} no tiene profesores asignados a las materias que se matriculo`));
@@ -523,9 +523,9 @@ export default class GestorColegio {
                 // condicion que para crear el archivo. En el array debe haber al menos un elemento(alumno):
                 if(alumnosDelProfesor.length > 0){   
                     console.log("");
-                    console.log(chalk.greenBright(`Se ha creado el listado y el mismo ha sido exportado a la siguiente direccion: ./Data/alumnosDe${profesorSolicitado.nombre.toLocaleUpperCase()}(${profesorSolicitado.id}).json`));
+                    console.log(chalk.greenBright(`Se ha creado el listado y el mismo ha sido exportado a la siguiente direccion: ./Listados/alumnosDe${profesorSolicitado.nombre.toLocaleUpperCase()}(${profesorSolicitado.id}).json`));
                      console.log("");
-                    escribir(alumnosDelProfesor,`./Data/alumnosDe${profesorSolicitado.nombre.toLocaleUpperCase()}(${profesorSolicitado.id}).json`)
+                    escribir(alumnosDelProfesor,`./Listados/alumnosDe${profesorSolicitado.nombre.toLocaleUpperCase()}(${profesorSolicitado.id}).json`)
                 // en caso de que no tenga ningun elemento el array(osea que no hay alumnos)
                 }else {
                     console.log(chalk.redBright(`El Profesor con el ID: ${profesorSolicitado.id} no tiene alumnos asignados a la/s materia/s que dicta`));
@@ -561,13 +561,13 @@ export default class GestorColegio {
             arrayAlumnosPromedio.push(alumnoConSuPromedio)
             }
             // convierto el array a string y lo exporto en un archivo JSON.
-            fs.writeFileSync("./Data/alumnosPromedios.json",JSON.stringify(arrayAlumnosPromedio, null, 2));
+            fs.writeFileSync("./Listados/alumnosPromedios.json",JSON.stringify(arrayAlumnosPromedio, null, 2));
 
             console.log("");
             console.log(chalk.greenBright(`Se ha creado el listado con exito`));
-            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Data/alumnosPromedios.json`));
+            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Listados/alumnosPromedios.json`));
             console.log("");
-
+            console.log(arrayAlumnosPromedio);
         }else {
             console.log("");
             // en caso de no haber un listado de alumnos:
@@ -603,12 +603,13 @@ export default class GestorColegio {
                     return 0;
                 }
             })
-            fs.writeFileSync("./Data/listado-alumnos.json",JSON.stringify(alumnosOrdenados, null, 2))
+            fs.writeFileSync("./Listados/listado-alumnos.json",JSON.stringify(alumnosOrdenados, null, 2))
 
             console.log("");
             console.log(chalk.greenBright(`Se ha creado el listado de Alumnos (ordenado alfabeticamente) con exito!`));
-            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Data/listado-alumnos.json`));
+            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Listados/listado-alumnos.json`));
             console.log("");
+            console.log(alumnosOrdenados);
         }else {
             console.log("");
             // en caso de no haber un listado de alumnos:
@@ -644,12 +645,14 @@ export default class GestorColegio {
                     return 0;
                 }
             })
-            fs.writeFileSync("./Data/listado-profesores.json",JSON.stringify(profesoresOrdenados, null, 2))
+            fs.writeFileSync("./Listados/listado-profesores.json",JSON.stringify(profesoresOrdenados, null, 2))
 
             console.log("");
             console.log(chalk.greenBright(`Se ha creado el listado de Profesores (ordenado alfabeticamente) con exito!`));
-            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Data/listado-profesores.json`));
+            console.log(chalk.greenBright(`El mismo ha sido exportado a la siguiente direccion: ./Listados/listado-profesores.json`));
             console.log("");
+            console.log(profesoresOrdenados);
+            
         }else {
             console.log("");
             // en caso de no haber un listado de Profesores:
