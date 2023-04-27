@@ -210,10 +210,10 @@ function crearlistaDeUnaEntidad(entidad:string, direccionlistadoDeEntidades:stri
                 console.log("");
             }else {
                 console.log("");
-                console.log(chalk.greenBright(`Se ha encontrado el ${entidad} y ha sido exportado a la siguiente direccion: ./Data/${listadoEntidades[entidadEncontrada].nombre}-${listadoEntidades[entidadEncontrada].apellido}.json`));
+                console.log(chalk.greenBright(`Se ha encontrado el ${entidad} y ha sido exportado a la siguiente direccion: ./Listados/${listadoEntidades[entidadEncontrada].nombre}-${listadoEntidades[entidadEncontrada].apellido}.json`));
                 console.log("");
                 // creo un archivo con la entidad encontrada:
-                fs.writeFileSync(`./Data/${listadoEntidades[entidadEncontrada].nombre}-${listadoEntidades[entidadEncontrada].apellido}.json`,JSON.stringify(listadoEntidades[entidadEncontrada], null, 2));
+                fs.writeFileSync(`./Listados/${listadoEntidades[entidadEncontrada].nombre}-${listadoEntidades[entidadEncontrada].apellido}.json`,JSON.stringify(listadoEntidades[entidadEncontrada], null, 2));
             }
     }else {
     console.log("");
